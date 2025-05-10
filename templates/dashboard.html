@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-bar">
+            <a href="{{ url_for('index') }}" class="nav-link">Upload New Video</a>
+        </nav>
+        <h1>Generated Clips for {{ video[1] }}</h1>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="clips-container">
+            {% for clip in clips %}
+            <div class="clip-card">
+                <video controls width="320">
+                    <source src="{{ clip.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="clip-description">{{ clip.description }}</p>
+                <p class="clip-time">Time: {{ clip.start_time|round(1) }}s - {{ clip.end_time|round(1) }}s</p>
+            </div>
+            {% endfor %}
+            {% if not clips %}
+                <p class="no-clips">No clips have been generated yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

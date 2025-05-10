@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Environment variables
+.env
+
+# Database
+*.db
+
+# Video and clip outputs
+clips/
+transcripts/
+uploads/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Stack dumps
+*.stackdump

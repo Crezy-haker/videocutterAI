@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Highlight Generator</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script>
+        function checkStatus(videoId) {
+            fetch(`/status/${videoId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const statusDiv = document.getElementById('status');
+                    statusDiv.textContent = `Status: ${data.status}`;
+                    
+                    if (data.status === 'processed' && data.redirect) {
+                        window.location.href = data.redirect;
+                    } else if (!data.status.startsWith('error')) {
+                        setTimeout(() => checkStatus(videoId), 2000);
+                    }
+                });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Video Highlight Generator</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="POST" enctype="multipart/form-data" action="/upload">
+            <div class="upload-form">
+                <input type="file" name="video" accept=".mp4,.avi,.mov,.mkv">
+                <button type="submit">Upload & Generate Highlights</button>
+            </div>
+            <div class="file-info">
+                Allowed file types: MP4, AVI, MOV, MKV<br>
+                Maximum file size: 500MB
+            </div>
+        </form>        <div id="status" class="processing-status"></div>
+    </div>
+
+    <script>
+        function checkStatus(videoId) {
+            fetch(`/status/${videoId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const statusDiv = document.getElementById('status');
+                    if (data.message) {
+                        statusDiv.innerHTML = `
+                            <div class="status-message">
+                                <p>${data.message}</p>
+                                ${data.status === 'uploaded' ? '<div class="loading-spinner"></div>' : ''}
+                            </div>
+                        `;
+                    } else {
+                        statusDiv.textContent = `Status: ${data.status}`;
+                    }
+                    
+                    if (data.status === 'processed' && data.redirect) {
+                        window.location.href = data.redirect;
+                    } else if (!data.status.startsWith('error')) {
+                        setTimeout(() => checkStatus(videoId), 2000);
+                    }
+                });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+flask
+python-dotenv
+openai-whisper
+google-generativeai
+ffmpeg-python
+moviepy
